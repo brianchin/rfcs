@@ -53,17 +53,13 @@ representation is:
 Since our Foo<T> value only contains pointers to something on the heap, this
 struct is actually safe to move.
 
-Further, with Rust's drop semantics, we're guaranteed that fields will be
-dropped in reverse order. This means that `borrowed_ref` would be dropped
-before `owned_box` would be dropped, which is a completely safe order to drop
-these fields in.
-
 This can be implemented with unsafe code in a safe way, but generally must be
 done once for each example. There already exists a crate which does this for
 some simple types (such as traits and slices) called owning_ref. However, it
-does not apply for the general set of cases where the second data member is a
-type that borrows from the first field's context, nor does it support multiple
-borrows when appropriate.
+does not apply for the general usages of heap lifetimes. `owning_ref` allows the
+type of the value that uses the heap-allocated value's lifetime to be a
+simple reference (e.g. `&'a T`), but not a value which uses the lifetime of the
+heap allocated value as a lifetime parameter (e.g. `T<'a>`).
 
 As a concrete example of the latter, let's attempt to write a data type as a
 generalization of strong and weak Rc's that provides an owning pointer to a
