@@ -169,6 +169,14 @@ let foo = Foo {
 }
 ```
 
+## Struct Dropping
+
+When dropping a struct, fields that depend on the lifetime must be dropped
+before the field which provides the lifetime. No other requirements are made
+about the order of dropped fields (at least within this RFC), but this is
+compatible with any attempts
+[to have struct fields dropped in reverse order](https://github.com/rust-lang/rfcs/issues/744).
+
 ## Struct Destruction
 
 When a struct is destructed (not dropped), the moved values maintain the same
